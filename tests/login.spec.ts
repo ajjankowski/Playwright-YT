@@ -1,9 +1,10 @@
 import { test, expect } from '@playwright/test';
+import { loginData } from '../test-data/login.data';
 
 test.describe('User login to Demobank', () => {
-  const userId = 'testerLO';
-  const userPassword = '12345678';
-  
+  const userId = loginData.userId;
+  const userPassword = loginData.userPassword;
+
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
   })
