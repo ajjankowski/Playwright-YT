@@ -1,49 +1,47 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
+import { LoginPage } from '../pages/login.page';
 import { loginData } from '../test-data/login.data';
 
-test.describe('User login to Demobank', () => {
+test.describe('User login to Demobank', { tag: ['@login', '@smoke'] }, () => {
+  let loginPage: LoginPage;
+
   const userId = loginData.userId;
   const userPassword = loginData.userPassword;
 
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
-  })
+    loginPage = new LoginPage(page);
+  });
 
-  test('successful login with correct credentials', async ({ page }) => {
+  test('successful login with correct credentials', { tag: "@positive" }, async ({ page }) => {
     // Arrange
     const expectedUserName = 'Jan Demobankowy';
-
     // Act
-    await page.getByTestId('login-input').fill(userId);
-    await page.getByTestId('password-input').fill(userPassword);
-    await page.getByTestId('login-button').click();
-
+    await loginPage.login(userId, userPassword);
     // Assert
-    await expect(page.getByTestId('user-name')).toHaveText(expectedUserName);
+    await expect(loginPage.userName).toHaveText(expectedUserName);
   });
 
-  test('unsuccessful login with too short username', async ({ page }) => {
+  test('unsuccessful login with too short username', { tag: "@negative" }, async ({ page }) => {
     // Arrange
     const wrongUserId = 'tester';
-
+    const expectedErrorMessage = 'identyfikator ma min. 8 znaków';
     // Act
-    await page.getByTestId('login-input').fill(wrongUserId);
-    await page.getByTestId('password-input').click();
-
+    await loginPage.loginInput.fill(wrongUserId);
+    await loginPage.passwordInput.click();
     // Assert
-    await expect(page.getByTestId('error-login-id')).toHaveText('identyfikator ma min. 8 znaków');
+    await expect(loginPage.loginError).toHaveText(expectedErrorMessage);
   });
 
-  test('unsuccessful login with too short password', async ({ page }) => {
+  test('unsuccessful login with too short password', { tag: "@negative" }, async ({ page }) => {
     // Arrange
     const wrongUserPassword = '123';
-
+    const expectedErrorMessage = 'hasło ma min. 8 znaków';
     // Act
-    await page.getByTestId('login-input').fill(userId);
-    await page.getByTestId('password-input').fill(wrongUserPassword);
-    await page.getByTestId('password-input').blur();
-
+    await loginPage.loginInput.fill(userId);
+    await loginPage.passwordInput.fill(wrongUserPassword);
+    await loginPage.passwordInput.blur();
     // Assert
-    await expect(page.getByTestId('error-login-password')).toHaveText('hasło ma min. 8 znaków');
+    await expect(loginPage.passwordError).toHaveText(expectedErrorMessage);
   });
 });
