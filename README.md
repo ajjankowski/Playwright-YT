@@ -65,6 +65,7 @@ The tested page is a simple demo of a bank.
 - Show autocomplete suggestion: <kbd>Ctrl</kbd> + <kbd>Spacebar</kbd>
 - Formatting: editor -> context menu -> Format Document
 - Formatting shortcut: <kbd>Shift</kbd> + <kbd>Alt</kbd> + <kbd>F</kbd>
+- Optimise imports shortcut: <kbd>Shift</kbd> + <kbd>Alt</kbd> + <kbd>O</kbd>
 - Format code on save: 
   - Top menu: View -> Open Command Palette
   - Type: user settings - chose `Preferences: Open User Settings`
